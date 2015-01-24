@@ -10,3 +10,41 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+*.class
+*.log
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+*target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+project/project/*
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# Eclipse
+*.target
+*.classpath
+*.project
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# emacs
+*.ensime
+*.ensime_cache
+.#*
+\#*\#
+*~
+
+# OSX
+.DS_Store
