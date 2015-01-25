@@ -1,6 +1,7 @@
 package com.brainfucker;
 
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class Gene{
 
@@ -13,9 +14,14 @@ public class Gene{
     public static final byte[] BRAC_LEFT = {0,1,0};
     public static final byte[] BRAC_RIGHT = {1,0,0};
     
-    public static final HashMap<byte[],Character> geneToChar;
-    public static final HashMap<Character,byte[]> charToGene;
+    public static HashMap<byte[],Character> geneToChar;
+    public static HashMap<Character,byte[]> charToGene;
     static {
+	instanciateMaps();
+	
+    }
+
+    private static void instanciateMaps(){
 	geneToChar = new HashMap<byte[],Character>();
 	geneToChar.put(NEXT, '>');
 	geneToChar.put(PREV, '<');
@@ -35,15 +41,12 @@ public class Gene{
 	charToGene.put(',', INPUT);
 	charToGene.put('[', BRAC_LEFT);
 	charToGene.put(']', BRAC_RIGHT);
-	
     }
 
     public static byte[] strToByte(String s){
 	byte[] a = new byte[s.length()];
-	int binary = Integer.parseInt(s);
-	for(int i = 0; i < 3; i++){
-	    a[i] = (byte) (binary % 10);
-	    binary =  binary / 10;
+        for(int i = 0; i < s.length(); i++){
+	    a[i] = (byte) Character.getNumericValue(s.charAt(i));
 	}
 	return a;
     }
@@ -77,19 +80,27 @@ public class Gene{
      * Creates a random gene
      */
     public Gene(){
+	instanciateMaps();
 	makeRandom();
+	Arrays.toString(data);
     }
     
     public Gene(byte[] data){
+	instanciateMaps();
 	this.data = data;
+	Arrays.toString(data);
     }
 
     public Gene(String s){
+	instanciateMaps();
 	this.data = strToByte(s);
+	Arrays.toString(data);
     }
 
     public Gene(char c){
+	instanciateMaps();
 	this.data = charToGene.get(c);
+	Arrays.toString(data);
     }
 
     public String getStrData(){
