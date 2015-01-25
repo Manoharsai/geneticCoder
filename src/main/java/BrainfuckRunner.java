@@ -3,7 +3,7 @@ package com.brainfucker;
 import java.util.Arrays;
 import java.util.Stack;
 
-class BrainfuckRunner {
+public class BrainfuckRunner {
 
     private char[] data;
 
