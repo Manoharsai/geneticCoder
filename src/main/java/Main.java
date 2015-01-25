@@ -14,8 +14,5 @@ public class Main{
 					  elitismRate,
 					  mutationRate);
 	bfr.run();
-
-    
-    
     }
 }

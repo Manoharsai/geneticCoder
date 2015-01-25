@@ -66,24 +66,35 @@ public class BrainfuckRunner {
 	// keep track of tailing bracket
 	int lastRightBrack = openingBrac;
 
-	for(int i = openingBrac; i < prog.length(); i++){
+	int i = openingBrac;
+	while(i < prog.length()){
+	    
 	    if(prog.charAt(i) == '['){
 		// Put opening brac in stack without checking
 		s.push('[');
 	    }
 	    if (prog.charAt(i) == ']'){
 		// Get char from top of stack
-		char last = s.pop();
+		char last = 't';
+		if(!s.empty()){
+		    last = s.pop();
+		} else {
+		    throw new Exception("Too many ]");
+		}
+		
 		// If it does not match, there is a problem
+	
 		if(last == ']'){
 		    throw new Exception("Too many ]");
 		}
-		//Check if empty and return value
-		if(s.isEmpty()){
-		    // This is the spot
-		    return i;
-		}
+			
 	    }
+	    i++;
+	}
+	//Check if empty and return value
+	if(s.empty()){
+	    // This is the spot
+	    return i;
 	}
 
 	// Extra [ if here
