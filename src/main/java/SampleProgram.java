@@ -17,6 +17,8 @@ public class SampleProgram {
 
 	public int length; 
 
+	public String output = "";
+
 	/*!
 	 * Indicates the likelehood that a + is followed by a +, conversly that a - is followed by a -, or that a > is followed by a >
 	 */
@@ -72,6 +74,19 @@ public class SampleProgram {
 		}
 		return value;
 
+	}
+
+	/*!
+	 * Remove Simple indefinate loops
+	 */
+	private void removeInfiniteLoops() {
+		for (int i = 0; i < testProgram.length - 1; i++) {
+			if (testProgram[i] == '[' && testProgram[i + 1] == ']') {
+				char[] excludedChars = {'[', ']'};
+				testProgram[i]     = randomValidChar(excludedChars);
+				testProgram[i + 1] = randomValidChar(excludedChars);
+			}
+		}
 	}
 
 	/*!
@@ -151,6 +166,7 @@ public class SampleProgram {
 			}
 		}
 
+		removeInfiniteLoops();
 	}
 
 	/*!
@@ -161,13 +177,16 @@ public class SampleProgram {
 		int numbStartBrackets = 0;
 		int numbEndBrackets   = 1;
 
-		char lastChar         = 'A';
 		while (numbStartBrackets != numbEndBrackets) {
 			numbStartBrackets = 0;
 			numbEndBrackets   = 0;
 			
 			int lastStartBracketPos = -1;
-			for (int i = 0; i < length; i++) {
+
+			char[] initialExclusion = {'[','<','.',',','-'};
+			testProgram[0] = randomValidChar(initialExclusion);
+			char lastChar  = testProgram[0];
+			for (int i = 1; i < length; i++) {
 				char newChar = randomValidChar();
 				if (closeBrackets) {
 					if (numbStartBrackets <= numbEndBrackets) {
@@ -232,6 +251,7 @@ public class SampleProgram {
 			lastChar 	   = newChar;
 			}
 		}
+		removeInfiniteLoops();
 	}
 
 	/*************** Debug ****************/

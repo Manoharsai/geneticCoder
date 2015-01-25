@@ -16,7 +16,7 @@ public class GeneticSimple {
 	private double mutationRate;
 	private String desiredOutput;
     
-    private static final Range RANGE = new Range(27,30);
+    private static final Range RANGE = new Range(65,68);
 
     public GeneticSimple(int population, double elitismRate, double mutationRate, String desiredOutput) {
        
@@ -96,6 +96,8 @@ public class GeneticSimple {
 			
 			String output = bRRunner.run(testPrograms.get(i).getStringVal());
 
+			testPrograms.get(i).output = output;
+
 			//	System.out.println(testPrograms.get(i).getStringVal() + "  ===  " + output);
 
 			//Pattern pattern = Pattern.compile("@\\s*(\\d+)");
@@ -111,9 +113,16 @@ public class GeneticSimple {
 			}else if (output.contains("<=$:$=>")) {
 				fitness += errorVal;
 			} else {
-				for (int foo = 0; foo < output.length(); foo++) {
-				    int charVal = (foo >= desiredOutput.length()) ? 0 : desiredOutput.charAt(foo);
-					int difference = charVal - output.charAt(foo);
+				for (int foo = 0; foo < desiredOutput.length(); foo++) {
+				    int charValDesired    = desiredOutput.charAt(foo);
+				    int charValActual     = (foo >= output.length()) ? 0 : output.charAt(foo);
+					int difference 		  = charValDesired - charValActual;
+
+
+					if (difference == 0) {
+						System.out.println("MATCH FOUND _ " + charValDesired + "output actual: " + charValActual + " #" + Character.toChars(charValDesired) + " : " + Character.toChars(charValActual) );
+					}
+
 					fitness += (difference < 0) ? -difference : difference;
 				}
 			}
@@ -192,7 +201,7 @@ public class GeneticSimple {
 	 * Prints the best program of the set 
 	 */
 	public String getBest() {
-		return testPrograms.get(0).getStringVal() + "    fitness: " + testPrograms.get(0).fitness;
+		return testPrograms.get(0).getStringVal() + "    fitness: " + testPrograms.get(0).fitness + "     output :" + testPrograms.get(0).output;
 	}
 
 }
