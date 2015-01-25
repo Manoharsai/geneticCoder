@@ -1,24 +1,18 @@
 package com.brainfucker;
 
+import java.util.Arrays;
+
 class BrainfuckRunner {
 
     private char[] data;
 
-    // Points to current index in data
-    private int dataPtr;
-
     private int argPtr;
-
-    // Excecution is at this colunm
-    private int executeCol;
-
-    private String prog;
     
     private String args;
 
     private String output;
 
-    private static final int ARRAYSIZE = 30000;
+    private static final int ARRAYSIZE = 10;
 
     private static final int MAX_CHAR_NUM = 300;
 
@@ -39,25 +33,32 @@ class BrainfuckRunner {
 
     private void clean(){
 	data = new char[ARRAYSIZE];
-	dataPtr = 0;
 	argPtr = 0;
-	executeCol = 0;
 	args = "";
 	output = "";
     }
 
-    public  String run(String program) throws Exception{
-	
-	for(int i = 0; i < prog.length(); i++){
-	    interperateChar(prog.charAt(i), i);
+    public String run(String program) throws Exception{
+	clean();
+	return run(program, 0);
+    }
+
+    private String run(String program, int dataPtr) throws Exception{
+	for(int i = 0; i < program.length(); i++){
+	    dataPtr = interperateChar(program.charAt(i), i, dataPtr, program);
 	}
 	return output;
     }
 
-    private void interperateChar(char c, int progLoc) throws Exception {
+    private int interperateChar(
+				 char c,
+				 int executeCol,
+				 int dataPtr,
+				 String prog
+				 ) throws Exception {
 	switch(c){
 	case Token.NEXT:
-	    System.out.println("t");
+	    
 	    if(dataPtr + 1 < data.length){
 		dataPtr++;
 	    } else {
@@ -80,37 +81,34 @@ class BrainfuckRunner {
 	    break;
 	case Token.DEC:
 	    if(data[dataPtr] > 0){
-
+		data[dataPtr]--;
 	    } else {
-		throw new Exception("Out of bounds on data:" + dataPtr + ", too big @" + executeCol);
+		throw new Exception("Out of bounds on data:" + dataPtr + ", too small @" + executeCol);
 	    }
 	    break;
 	case Token.PRINT:
-	    output += dataPtr;
+	    output += "" + data[dataPtr];
 	    break;
 	case Token.INPUT:
 	    data[dataPtr] = args.charAt(argPtr);
 	    break;
 	case Token.BRAC_LEFT:
-	    if(data[dataPtr] > 0){
-		//backup data ptr
-		int dpt = dataPtr;
-   		while(data[dataPtr] > 0){
+	    if(data[dataPtr] > 1){
+   		while(data[dataPtr] > 1){
 		    int rightBracLoc = -1;
-		    for(int i = prog.length(); i > progLoc; i--){
+		    for(int i = prog.length() - 1; i > executeCol; i--){
 			if(prog.charAt(i) == Token.BRAC_RIGHT){
 			    rightBracLoc = i;
-			} else {
-			    // No matching bracket
-			    throw new Exception("Brackets are fucked @" + dataPtr);
+			    break;
 			}
+		    }
+		    if(rightBracLoc == -1){
+			// No matching bracket
+			throw new Exception("Brackets are fucked @" + dataPtr);
 		    }
 		    // Right bracket found or exception thrown
 		    // Run middle part
-		    for(int p = dataPtr + 1; p < rightBracLoc; p++){
-			interperateChar(prog.charAt(p), p);
-		    }
-		    
+		    run(prog.substring(executeCol + 1, rightBracLoc), dataPtr);
 		}
 	    }
 	    break;
@@ -118,8 +116,10 @@ class BrainfuckRunner {
 	    //Should never happen, fingers crossed
 	    break;
 	default:
-	    throw new Exception("Invalid char @" + executeCol);
-	    	}
+	    throw new Exception("Invalid char @" + executeCol);  
+	}
+
+	return dataPtr;
     }
     
 }

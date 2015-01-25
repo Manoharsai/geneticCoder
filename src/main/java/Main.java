@@ -9,9 +9,10 @@ public class Main{
 	}
 	pluses += '.';
 	try{
-	System.out.println(bfr.run(pluses));
+	    System.out.println(bfr.run(pluses));
+	    System.out.println(bfr.run("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."));
 	} catch(Exception e) {
-	    System.out.println(e.getMessage());
+	    e.printStackTrace(System.out);
 	}
     }
 }
