@@ -17,6 +17,10 @@ public class BrainfuckRunner {
 
     private static final int MAX_CHAR_NUM = 300;
 
+    private static final int MAX_LOOP_NUM = 1000;
+
+    private static final String EXCEPT = "<=$:$=>";
+
     private static class Token {
 	public static final char NEXT = '>';
 	public static final char PREV = '<';
@@ -98,28 +102,28 @@ public class BrainfuckRunner {
 	    if(dataPtr + 1 < data.length){
 		dataPtr++;
 	    } else {
-		throw new Exception("Out of bounds, too big @" + executeCol);
+		throw new Exception("Out of bounds, too big " + EXCEPT + executeCol);
 	    }
 	    break;
 	case Token.PREV:
 	    if(dataPtr - 1 >= 0){
 		dataPtr--;
 	    } else {
-		throw new Exception("Out of bounds, too small @" + executeCol);
+		throw new Exception("Out of bounds, too small " + EXCEPT + executeCol);
 	    }
 	    break;
 	case Token.INC:
 	    if(data[dataPtr] < MAX_CHAR_NUM){
 		data[dataPtr]++;
 	    } else {
-		throw new Exception("Out of bounds on data, too big @" + executeCol);
+		throw new Exception("Out of bounds on data, too big "+ EXCEPT + executeCol);
 	    }
 	    break;
 	case Token.DEC:
 	    if(data[dataPtr] > 0){
 		data[dataPtr]--;
 	    } else {
-		throw new Exception("Out of bounds on data:" + dataPtr + ", too small @" + executeCol);
+		throw new Exception("Out of bounds on data:" + dataPtr + ", too small "+ EXCEPT + executeCol);
 	    }
 	    break;
 	case Token.PRINT:
@@ -130,14 +134,20 @@ public class BrainfuckRunner {
 	    break;
 	case Token.BRAC_LEFT:
 	    if(data[dataPtr] > 1){
+		int loopCount = 0;
    		while(data[dataPtr] > 1){
+		    loopCount++;
+		    if(loopCount >= MAX_LOOP_NUM){
+			throw new Exception("Infinite loop " + EXCEPT + executeCol);
+		    }
 		    int rightBracLoc = -1;
 		    try {
 			rightBracLoc = findOtherBracket(prog, executeCol);
 		    } catch (Exception e) {
 			// No matching bracket
-			throw new Exception("Brackets are fucked @" + executeCol);
+			throw new Exception("Brackets are fucked "+ EXCEPT + executeCol);
 		    }
+		    
 		    // Right bracket found or exception thrown
 		    // Run middle part
 		    run(prog.substring(executeCol + 1, rightBracLoc), dataPtr);
@@ -145,10 +155,9 @@ public class BrainfuckRunner {
 	    }
 	    break;
 	case Token.BRAC_RIGHT:
-	    //Should never happen, fingers crossed
-	    break;
+	    throw new Exception("Brackets are really fucked " + EXCEPT + executeCol);
 	default:
-	    throw new Exception("Invalid char @" + executeCol);  
+	    throw new Exception("Invalid char " + EXCEPT + executeCol);  
 	}
 
 	return dataPtr;

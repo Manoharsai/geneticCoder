@@ -35,8 +35,12 @@ public class Brainfucker{
 
 	    gs.mate();
 
+	    gs.swap();
 	    
 	}
+
+	BrainfuckRunner bfr = new BrainfuckRunner();
+	System.out.println(bfr.run(gs.getBest()));
 
     }
 

@@ -15,12 +15,11 @@ public class GeneticSimple {
 	private double elitismRate;
 	private double mutationRate;
 	private String desiredOutput;
-
-	private BrainfuckRunner bRRunner;
+    
+    private static final Range RANGE = new Range(27,30);
 
     public GeneticSimple(int population, double elitismRate, double mutationRate, String desiredOutput) {
-		bRRunner = new BrainfuckRunner();
-
+       
 		this.population    = population;
 		this.elitismRate   = elitismRate;
 		this.mutationRate  = mutationRate;	
@@ -46,7 +45,7 @@ public class GeneticSimple {
 	 */
 	public void initPopulation() {
 		for (int i = 0; i < population; i++) {
-			SampleProgram temp = new SampleProgram(new Range(10, 30));
+			SampleProgram temp = new SampleProgram(RANGE);
 			testPrograms.add(temp);
 			buffer.add(temp);
 		}
@@ -58,15 +57,12 @@ public class GeneticSimple {
 	 * Swaps the population and the buffer
 	 */
 	public void swap() {
-		List<SampleProgram> temp = new ArrayList<SampleProgram>(testPrograms);
-
-		testPrograms = new ArrayList<SampleProgram>();
-
-		for (SampleProgram elem : buffer) {
-			testPrograms.add(elem);
+	    testPrograms = buffer;
+	    buffer = new ArrayList<SampleProgram>();
+	    	for (int i = 0; i < population; i++) {
+			SampleProgram temp = new SampleProgram(RANGE);
+			buffer.add(temp);
 		}
-
-		buffer = temp;
 	}
 
 	/*!
@@ -93,15 +89,26 @@ public class GeneticSimple {
 	 */
 	public void fitness() {
 		int errorVal = 10000;
+		BrainfuckRunner bRRunner = new BrainfuckRunner();
 		for (int i = 0; testPrograms.size() > i; i++) {
 			int fitness = 0;
 			//sample regex
+			
 			String output = bRRunner.run(testPrograms.get(i).getStringVal());
 
-			Pattern pattern = Pattern.compile("@\\s*(\\d+)");
-			Matcher matcher = pattern.matcher(output);
+			//	System.out.println(testPrograms.get(i).getStringVal() + "  ===  " + output);
 
-			if (matcher.find()) {
+			//Pattern pattern = Pattern.compile("@\\s*(\\d+)");
+			//Matcher matcher = pattern.matcher(output);
+
+			Pattern loopPattern = Pattern.compile("infinite\\sloop",Pattern.CASE_INSENSITIVE);
+			Matcher loopMatcher = loopPattern.matcher(output);
+			
+			if (loopMatcher.find()) {
+			    testPrograms.get(i).fillRandomly(true);
+			    fitness = errorVal;
+						  
+			}else if (output.contains("<=$:$=>")) {
 				fitness += errorVal;
 			} else {
 				for (int foo = 0; foo < output.length(); foo++) {
@@ -169,10 +176,10 @@ public class GeneticSimple {
 
 			//calculate the mutation
 			if (Math.random() < mutationRate) {
-				child1.mutate(10, false);
+			    child1.fillRandomly(true);
 			} 
 			if (Math.random() < mutationRate) {
-				child2.mutate(10, false);
+			    child2.fillRandomly(true);
 			} 
 
 			buffer.set(a, child1);
