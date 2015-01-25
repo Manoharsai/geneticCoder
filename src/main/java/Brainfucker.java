@@ -4,7 +4,7 @@ public class Brainfucker{
 
     private String desiredOutput;
     private int maxIteration;
-    private Population gs;
+    private Population p;
     
     public Brainfucker(String desiredOutput,
 		       int population,
@@ -14,33 +14,33 @@ public class Brainfucker{
 		       ){
 	this.desiredOutput = desiredOutput;
 	this.maxIteration = maxIteration;
-	gs = new Population(population,  elitismRate, mutationRate, desiredOutput);
+	p = new Population(population,  elitismRate, mutationRate, desiredOutput);
 	
     }
 
     public void run(){
 	// Creates empty populations
-	gs.initPopulation();
+	p.initPopulation();
 
 	// Loop through each generations
 	for(int i = 0; i < maxIteration; i++){
-	    gs.fitness();
-	    gs.sortPopulation();
+	    p.fitness();
+	    p.sortPopulation();
 
-	    System.out.println("iteration : " + i + " " + gs.getBest());
+	    System.out.println("iteration : " + i + " " + p.getBest());
 	   
-	    if(gs.getTestPrograms().get(0).fitness == 0){
+	    if(p.getTestPrograms().get(0).fitness == 0){
 		break;
 	    }
 
-	    gs.mate();
+	    p.mate();
 
-	    gs.swap();
+	    p.swap();
 	    
 	}
 
 	BrainfuckRunner bfr = new BrainfuckRunner();
-	System.out.println(bfr.run(gs.getBest()));
+	System.out.println(bfr.run(p.getBest()));
 
     }
 

@@ -36,11 +36,12 @@ public class Individual implements Comparable{
      * @param code: The prewritten string of code
      */
     public Individual(String genome) {
-    for (int i = 0; i < genes.length; i++) {
-        genes[i] = new Gene(genome.charAt(i));
-    }
-	
-	fitness = -1;
+	genes = new Gene[genome.length()];
+	    for (int i = 0; i < genes.length; i++) {
+		genes[i] = new Gene(genome.charAt(i));
+	    }
+	    
+	    fitness = -1;
 	
     }
 
@@ -52,10 +53,21 @@ public class Individual implements Comparable{
      * Flips a certain number of bits
      * @param numbBits: the number of bits, the bits are then randomly selected to be flipped in the bytes array
      */
-    public void flipRandBits(int numbBits) {
-        for (int i = 0; i < genes.length; i++) {
-            genes[i].makeRandom();
-        }
+    public void flipRandBits(int numBits) {
+	String genome = "";
+	for( Gene g : genes){
+	    genome += g.getStrData();
+	}
+	byte[] a = Gene.strToByte(genome);
+	for(int i = 0; i < numBits; i++){
+	    int index = (int) Math.floor(Math.random() * genome.length());
+	    if(a[index] == 0){
+		a[index] = 1;
+	    } else {
+		a[index] = 0;
+	    }
+	}
+	genes = Gene.strToGenes(Gene.byteToString(a));
     }
 
     /*!

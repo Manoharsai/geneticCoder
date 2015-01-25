@@ -154,7 +154,7 @@ public class Population {
 	    }
 	    
 	    String codeOne     = shortCode.substring(0, breakpoint) + longcode.substring(breakpoint, longcode.length());
-	    String codeTwo     = longcode.substring(0, breakpoint) + shortCode.substring(breakpoint, longcode.length());
+	    String codeTwo     = longcode.substring(0, breakpoint) + shortCode.substring(breakpoint, shortCode.length());
 	    
 	    buffer.set(i, new Individual(codeOne));
 	    buffer.set(i + 1, new Individual(codeTwo));

@@ -90,6 +90,14 @@ public class Gene{
 	data = charToGene.get(c);
     }
 
+    public String getStrData(){
+	String s = "";
+	for(byte b : data){
+	    s += "" +  b;
+	}
+	return s;
+    }
+
 
     public void strSet(String s){
 	data = strToByte(s);
@@ -103,6 +111,7 @@ public class Gene{
     }
 
     public void makeRandom(){
+	data = new byte[3];
 	for(int i = 0; i < 3; i++){
 	    // Set each bit to one or zero randomly
 	    data[i] = (byte) Math.floor( Math.random() * 2);
