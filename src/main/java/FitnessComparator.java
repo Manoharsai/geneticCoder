@@ -1,5 +1,7 @@
 package com.brainfucker;
 
+import java.util.Collections;
+import java.util.Comparator;
 
 /*!
  * Comparison operator for the Fitnesses of SampleProgram elements
