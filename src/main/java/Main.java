@@ -8,11 +8,13 @@ public class Main{
 	    pluses += '+';
 	}
 	pluses += '.';
+	System.out.println(bfr.run(pluses));
+	System.out.println(bfr.run(">++++++[<++++++++++>-]<+++++>>+[<+>-]<<[>>>+<<[<->->+<]>[<+>-]<<]>>>."));
+
 	try{
-	    System.out.println(bfr.run(pluses));
-	    System.out.println(bfr.run("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."));
-	} catch(Exception e) {
-	    e.printStackTrace(System.out);
+	    System.out.println(bfr.findOtherBracket("[][[[fdfasdf]]]",2));
+	}catch(Exception e){
+	    System.out.println(e.getMessage());
 	}
     }
 }

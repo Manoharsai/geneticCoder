@@ -1,6 +1,7 @@
 package com.brainfucker;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 class BrainfuckRunner {
 
@@ -38,9 +39,14 @@ class BrainfuckRunner {
 	output = "";
     }
 
-    public String run(String program) throws Exception{
+    public String run(String program){
 	clean();
-	return run(program, 0);
+	try{
+	    return run(program, 0);
+	} catch(Exception e){
+	    e.printStackTrace(System.out);
+	    return e.getMessage();
+	}
     }
 
     private String run(String program, int dataPtr) throws Exception{
@@ -48,6 +54,37 @@ class BrainfuckRunner {
 	    dataPtr = interperateChar(program.charAt(i), i, dataPtr, program);
 	}
 	return output;
+    }
+
+    public int findOtherBracket(String prog, int openingBrac) throws Exception{
+	// Create new stack to start process
+	Stack<Character> s = new Stack();
+	
+	// keep track of tailing bracket
+	int lastRightBrack = openingBrac;
+
+	for(int i = openingBrac; i < prog.length(); i++){
+	    if(prog.charAt(i) == '['){
+		// Put opening brac in stack without checking
+		s.push('[');
+	    }
+	    if (prog.charAt(i) == ']'){
+		// Get char from top of stack
+		char last = s.pop();
+		// If it does not match, there is a problem
+		if(last == ']'){
+		    throw new Exception("Too many ]");
+		}
+		//Check if empty and return value
+		if(s.isEmpty()){
+		    // This is the spot
+		    return i;
+		}
+	    }
+	}
+
+	// Extra [ if here
+	throw new Exception("Too many [");
     }
 
     private int interperateChar(
@@ -96,15 +133,11 @@ class BrainfuckRunner {
 	    if(data[dataPtr] > 1){
    		while(data[dataPtr] > 1){
 		    int rightBracLoc = -1;
-		    for(int i = prog.length() - 1; i > executeCol; i--){
-			if(prog.charAt(i) == Token.BRAC_RIGHT){
-			    rightBracLoc = i;
-			    break;
-			}
-		    }
-		    if(rightBracLoc == -1){
+		    try {
+			rightBracLoc = findOtherBracket(prog, executeCol);
+		    } catch (Exception e) {
 			// No matching bracket
-			throw new Exception("Brackets are fucked @" + dataPtr);
+			throw new Exception("Brackets are fucked @" + executeCol);
 		    }
 		    // Right bracket found or exception thrown
 		    // Run middle part
