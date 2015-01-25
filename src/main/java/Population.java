@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.*;
 
-public class GeneticSimple {
-	private List<SampleProgram> testPrograms;
-	private List<SampleProgram> buffer;
+public class Population {
+	private List<Individual> testPrograms;
+	private List<Individual> buffer;
 
 	private int population;
 	private double elitismRate;
@@ -18,7 +18,7 @@ public class GeneticSimple {
     
     private static final Range RANGE = new Range(40,120);
 
-    public GeneticSimple(int population, double elitismRate, double mutationRate, String desiredOutput) {
+    public Population(int population, double elitismRate, double mutationRate, String desiredOutput) {
        
 		this.population    = population;
 		this.elitismRate   = elitismRate;
@@ -29,13 +29,13 @@ public class GeneticSimple {
 		/*!
 		 * Sets up the testPrograms and the buffer with default values, random for programs and empty for buffer
 		 */
-		testPrograms = new ArrayList<SampleProgram>(population);
-		buffer       = new ArrayList<SampleProgram>(population);
+		testPrograms = new ArrayList<Individual>(population);
+		buffer       = new ArrayList<Individual>(population);
 
 	   
 	}
 
-	public List<SampleProgram> getTestPrograms() {
+	public List<Individual> getTestPrograms() {
 		return testPrograms;
 	}
 
@@ -45,7 +45,7 @@ public class GeneticSimple {
 	 */
 	public void initPopulation() {
 		for (int i = 0; i < population; i++) {
-			SampleProgram temp = new SampleProgram(RANGE);
+			Individual temp = new Individual(RANGE);
 			testPrograms.add(temp);
 			buffer.add(temp);
 		}
@@ -58,9 +58,9 @@ public class GeneticSimple {
 	 */
 	public void swap() {
 	    testPrograms = buffer;
-	    buffer = new ArrayList<SampleProgram>();
+	    buffer = new ArrayList<Individual>();
 	    	for (int i = 0; i < population; i++) {
-			SampleProgram temp = new SampleProgram(RANGE);
+			Individual temp = new Individual(RANGE);
 			buffer.add(temp);
 		}
 	}
@@ -73,7 +73,7 @@ public class GeneticSimple {
 		int numberElites = (int) (elitismRate * (double) population);
 		for (int i = 0; i < numberElites; i++) {
 			buffer.set(i, testPrograms.get(i));
-			buffer.get(i).mutate(2, false);
+			buffer.get(i).mutate(2);
 		}
 		return numberElites;
 	}
@@ -82,7 +82,7 @@ public class GeneticSimple {
 	 * Sorts the programs based off of their fitness
 	 */
 	public void sortPopulation() {
-		Collections.sort(testPrograms, new FitnessComparator());
+		Collections.sort(testPrograms, new IndividualFitnessComparator());
 	}
 
 	/*!
@@ -95,14 +95,10 @@ public class GeneticSimple {
 			int fitness = 0;
 			//sample regex
 			
-			String output = bRRunner.run(testPrograms.get(i).getStringVal());
+			String output = bRRunner.run(Gene.toString(testPrograms.get(i).bytes));
 
 			testPrograms.get(i).output = output;
 
-			//	System.out.println(testPrograms.get(i).getStringVal() + "  ===  " + output);
-
-			//Pattern pattern = Pattern.compile("@\\s*(\\d+)");
-			//Matcher matcher = pattern.matcher(output);
 
 			Pattern loopPattern = Pattern.compile("infinite\\sloop",Pattern.CASE_INSENSITIVE);
 			Matcher loopMatcher = loopPattern.matcher(output);
@@ -118,11 +114,6 @@ public class GeneticSimple {
 				    int charValDesired    = desiredOutput.charAt(foo);
 				    int charValActual     = (foo >= output.length()) ? 0 : output.charAt(foo);
 					int difference 		  = charValDesired - charValActual;
-
-
-					if (difference == 0) {
-						System.out.println("MATCH FOUND _ " + charValDesired + "output actual: " + charValActual + " #" + Character.toChars(charValDesired) + " : " + Character.toChars(charValActual) );
-					}
 
 					fitness += (difference < 0) ? -difference : difference;
 				}
@@ -150,50 +141,23 @@ public class GeneticSimple {
 
 		for (int a = numbElites; a < testPrograms.size() - 1; a += 2) {
 
-			SampleProgram parent1 = testPrograms.get(a);
-			SampleProgram parent2 = testPrograms.get(a + 1);
+			Individual parent1 = testPrograms.get(i);
+			Individual parent2 = testPrograms.get(i + 1);
 
-			char[] code1 = parent1.testProgram;
-			char[] code2 = parent2.testProgram;
+			String shortCode   = (parent1.bytes.length < parent2.bytes.length) ? Gene.toString(parent1.bytes) : Gene.toString(parent2.bytes);
+			String longcode    = (parent1.bytes.length > parent2.bytes.length) ? Gene.toString(parent1.bytes) : Gene.toString(parent2.bytes);
 
-			//length of the new code is a number between the other two 
-			int codeLen  = code1.length + (int) Math.floor( Math.random() * (code2.length - code1.length));
+			int breakpoint     = (int) ((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 
-			char[] newCode1 = new char[codeLen];
-			char[] newCode2 = new char[codeLen];
- 
-			//the breakpoint where the codes are spliced
-			int breakpoint = (int) Math.floor( (double) codeLen * Math.random() );
-
-			while (breakpoint >= code1.length || breakpoint >= code2.length) {
-				breakpoint = (int) Math.floor( (double) codeLen * Math.random() );
+			while (breakpoint % 3 != 0) {
+				breakpoint     = (int) ((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 			}
 
-			//sets the values to there initial values til the breakpoint
-			for (int i = 0; i < breakpoint; i++) {
-				newCode1[i] = code1[i];
-				newCode2[i] = code2[i];
-			}
+			String codeOne     = shortCode.substring(0, breakpoint - 1) + longcode.substring(breakpoint, longcode.length() - 1);
+			String codeTwo     = longcode.substring(0, breakpoint - 1) + shortCode.substring(breakpoint, longcode.length() - 1);
 
-			//splits the code
-			for (int i = breakpoint; i < codeLen; i++) {
-				newCode1[i] = (i < code2.length) ? code2[i] : code1[i];
-				newCode2[i] = (i < code1.length) ? code1[i] : code2[i];
-			}
-
-			SampleProgram child1 = new SampleProgram(newCode1);
-			SampleProgram child2 = new SampleProgram(newCode2);
-
-			//calculate the mutation
-			if (Math.random() < mutationRate) {
-			    child1.mutate(30, true);
-			} 
-			if (Math.random() < mutationRate) {
-			    child2.mutate(30, true);
-			} 
-
-			buffer.set(a, child1);
-			buffer.set(a + 1, child2);
+			buffer.set(a, new Individual(codeOne));
+			buffer.set(a + 1, new Individual(codeTwo));
 		}
 
 	}

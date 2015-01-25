@@ -134,6 +134,7 @@ public class SampleProgram {
 				testProgram[index] = randomValidChar();
 			}
 		}
+		/*
 		int numBrackets = numbNonClosedBrackets();
 
 		if (numBrackets > 0 ) {
@@ -165,6 +166,7 @@ public class SampleProgram {
 				testProgram[randomPos] = '[';
 			}
 		}
+		*/
 
 		removeInfiniteLoops();
 	}
