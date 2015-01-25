@@ -105,7 +105,7 @@ public class GeneticSimple {
 				fitness += errorVal;
 			} else {
 				for (int foo = 0; foo < output.length(); foo++) {
-					int charVal = (foo >= desiredOutput.length() + 1) ? 0 : desiredOutput.charAt(foo);
+				    int charVal = (foo >= desiredOutput.length()) ? 0 : desiredOutput.charAt(foo);
 					int difference = charVal - output.charAt(foo);
 					fitness += (difference < 0) ? -difference : difference;
 				}
@@ -131,7 +131,7 @@ public class GeneticSimple {
 	public void mate() {
 		int numbElites = CalcElitism();
 
-		for (int a = numbElites; a < testPrograms.size(); a += 2) {
+		for (int a = numbElites; a < testPrograms.size() - 1; a += 2) {
 
 			SampleProgram parent1 = testPrograms.get(a);
 			SampleProgram parent2 = testPrograms.get(a + 1);
@@ -184,8 +184,8 @@ public class GeneticSimple {
 	/*!
 	 * Prints the best program of the set 
 	 */
-	public void printBest() {
-		System.out.println(testPrograms.get(0).getStringVal() + "    fitness: " + testPrograms.get(0).fitness);
+	public String getBest() {
+		return testPrograms.get(0).getStringVal() + "    fitness: " + testPrograms.get(0).fitness;
 	}
 
 }

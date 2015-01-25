@@ -27,8 +27,8 @@ public class Brainfucker{
 	    gs.fitness();
 	    gs.sortPopulation();
 
-	    System.out.println("iteration : " + i + "     ");
-
+	    System.out.println("iteration : " + i + " " + gs.getBest());
+	   
 	    if(gs.getTestPrograms().get(0).fitness == 0){
 		break;
 	    }
