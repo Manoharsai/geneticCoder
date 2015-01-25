@@ -12,13 +12,19 @@ public class GeneticSimple {
 	private List<SampleProgram> buffer;
 
 	private int population;
-	private float elitismRate;
-	private float mutationRate;
+	private double elitismRate;
+	private double mutationRate;
+	private Stirng desiredOutput;
 
-	public GeneticSimple(int population, int maxIteration, float elitismRate, float mutationRate) {
-		this.population   = population;
-		this.elitismRate  = elitismRate;
-		this.mutationRate = mutationRate;	
+	private BrainfuckRunner bRRunner;
+
+	public GeneticSimple(int population double elitismRate, double mutationRate, String desiredOutput) {
+		bRRunner = new BrainfuckRunner();
+
+		this.population    = population;
+		this.elitismRate   = elitismRate;
+		this.mutationRate  = mutationRate;	
+		this.desiredOutput = desiredOutput; 
 	
 		
 		/*!
@@ -27,28 +33,13 @@ public class GeneticSimple {
 		testPrograms = new ArrayList<SampleProgram>(population);
 		buffer       = new ArrayList<SampleProgram>(population);
 
-	    
-	    initPopulation();
-	    
-	    /*!
-	     * Handels the actual running of the genetic algorithm element
-	     */
-	    for (int i = 0; i < maxIteration; i++) {
-	        fitness();
-	        sortPopulation();
-	
-			System.out.print("iteration : " + i + "       ");
-	        printBest();
-	        
-	        if (testPrograms.get(0).fitness == 0 ) {
-	            break;
-	        }
-	        
-	        mate();
-	        
-	        swap();
-	    }
+	   
 	}
+
+	public List<SampleProgram> getTestPrograms() {
+		return testPrograms;
+	}
+
 
 	/*!
 	 * Initializes the population and the buffer, though the buffer is merely empty
@@ -83,7 +74,7 @@ public class GeneticSimple {
 	 * @return the number of elites used
 	 */
 	public int CalcElitism() {
-		int numberElites = (int) (elitismRate * (float) population);
+		int numberElites = (int) (elitismRate * (double) population);
 		for (int i = 0; i < numberElites; i++) {
 			buffer.set(i, testPrograms.get(i));
 		}
@@ -101,14 +92,31 @@ public class GeneticSimple {
 	 * Determines the fitness of each individual in the testPrograms array
 	 */
 	public void fitness() {
+		int errorVal = 10000;
 		for (int i = 0; testPrograms.size() > i; i++) {
+			int fitness = 0;
 			//sample regex
-			Pattern pattern = Pattern.compile("[\\w\\s]*(\\w)\\s*@\\s*(\\d+)");
-			Matcher matcher = pattern.matcher(testPrograms.get(i).getStringVal());
+			String output = bRRunner.run(testProgram.get(i).getStringVal());
+
+			Pattern pattern = Pattern.compile("@\\s*(\\d+)");
+			Matcher matcher = pattern.matcher(output);
+
+			if (matcher.matches()) {
+				fitness += errorVal;
+			} else {
+				for (int foo = 0; foo < output.length(); foo++) {
+					int charVal = (foo >= desiredOutput.length() + 1) ? 0 : desiredOutput.chatAt(foo);
+					int difference = charVal - output.charAt(foo);
+					fitness += (difference < 0) ? -difference : difference;
+				}
+			}
+
+
+
 
 			//implement!
 			
-			testPrograms.get(i).fitness = (int) Math.floor(Math.random() * (double) 100) + 2;
+			testPrograms.get(i).fitness = fitness;
 		}
 
 
