@@ -40,8 +40,10 @@ public class Gene{
 
     public static byte[] strToByte(String s){
 	byte[] a = new byte[s.length()];
-	for(int i = 0; i < s.length(); i++){
-	    a[i] = Byte.parseByte("" + s.charAt(i));
+	int binary = Integer.parseInt(s);
+	for(int i = 0; i < 3; i++){
+	    a[i] = (byte) (binary % 10);
+	    binary =  binary / 10;
 	}
 	return a;
     }
