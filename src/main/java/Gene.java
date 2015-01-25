@@ -83,11 +83,11 @@ public class Gene{
     }
 
     public Gene(String s){
-	data = strToByte(s);
+	this.data = strToByte(s);
     }
 
     public Gene(char c){
-	data = charToGene.get(c);
+	this.data = charToGene.get(c);
     }
 
     public String getStrData(){
