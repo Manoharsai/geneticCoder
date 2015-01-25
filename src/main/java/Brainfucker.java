@@ -9,8 +9,8 @@ public class Brainfucker{
     public Brainfucker(String desiredOutput,
 		       int population,
 		       int maxIteration,
-		       float elitismRate,
-		       float mutationRate
+		       double elitismRate,
+		       double mutationRate
 		       ){
 	this.desiredOutput = desiredOutput;
 	this.maxIteration = maxIteration;

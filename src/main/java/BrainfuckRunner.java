@@ -13,7 +13,7 @@ public class BrainfuckRunner {
 
     private String output;
 
-    private static final int ARRAYSIZE = 10;
+    private static final int ARRAYSIZE = 300;
 
     private static final int MAX_CHAR_NUM = 300;
 
@@ -44,7 +44,6 @@ public class BrainfuckRunner {
 	try{
 	    return run(program, 0);
 	} catch(Exception e){
-	    e.printStackTrace(System.out);
 	    return e.getMessage();
 	}
     }
