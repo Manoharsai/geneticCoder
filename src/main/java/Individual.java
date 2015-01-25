@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.*;
 
-public class Individual {
+public class Individual implements Comparable{
     public Gene[] genes;
     
-    public int fitnees;
+    public int fitness;
     
     
     /*!
@@ -26,7 +26,7 @@ public class Individual {
         genes[i] = new Gene();
     }
 	
-	fitnees = -1;
+	fitness = -1;
     }
     
     /*!
@@ -41,13 +41,17 @@ public class Individual {
 	fitness = -1;
 	
     }
+
+    public int getFitness(){
+	return this.fitness;
+    }
     
     /*!
      * Flips a certain number of bits
      * @param numbBits: the number of bits, the bits are then randomly selected to be flipped in the bytes array
      */
     public void flipRandBits(int numbBits) {
-        for (int i = 0; i < genes.length; genes++) {
+        for (int i = 0; i < genes.length; i++) {
             genes[i].makeRandom();
         }
     }
@@ -75,6 +79,20 @@ public class Individual {
 	    s += g;
 	}
 	return s;
+    }
+
+    @Override
+    public int compareTo(Object o){
+	if( o instanceof Individual){
+	    Individual i = (Individual) o;
+	    if(i.getFitness() > this.getFitness()){
+		return 1;
+	    } else {
+		return -1;
+	    }
+	} else {
+	    return -1;
+	}
     }
     
 }

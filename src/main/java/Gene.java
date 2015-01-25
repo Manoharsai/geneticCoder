@@ -13,39 +13,40 @@ public class Gene{
     public static final byte[] BRAC_LEFT = {0,1,0};
     public static final byte[] BRAC_RIGHT = {1,0,0};
     
-    public static final HashMap<byte[],char> geneToChar;
-    public static final HashMap<char,byte[]> charToGene;
+    public static final HashMap<byte[],Character> geneToChar;
+    public static final HashMap<Character,byte[]> charToGene;
     static {
-	geneToChar = new HashMap<byte[],char>();
-	geneToChar.add(NEXT, '>');
-	geneToChar.add(PREV, '<');
-	geneToChar.add(INC, '+');
-	geneToChar.add(DEC, '-');
-	geneToChar.add(PRINT, '.');
-	geneToChar.add(INPUT, ',');
-	geneToChar.add(BRAC_LEFT, '[');
-	geneToChar.add(BRAC_RIGHT, ']');
+	geneToChar = new HashMap<byte[],Character>();
+	geneToChar.put(NEXT, '>');
+	geneToChar.put(PREV, '<');
+	geneToChar.put(INC, '+');
+	geneToChar.put(DEC, '-');
+	geneToChar.put(PRINT, '.');
+	geneToChar.put(INPUT, ',');
+	geneToChar.put(BRAC_LEFT, '[');
+	geneToChar.put(BRAC_RIGHT, ']');
 
-	charToGene = new HashMap<char,byte[]>();
-	charToGene.add('>', NEXT);
-	charToGene.add('<', PREV);
-	charToGene.add('+', INC);
-	charToGene.add('-', DEC);
-	charToGene.add('.', PRINT);
-	charToGene.add(',', INPUT);
-	charToGene.add('[', BRAC_LEFT);
-	charToGene.add(']', BRAC_RIGHT);
+	charToGene = new HashMap<Character,byte[]>();
+	charToGene.put('>', NEXT);
+	charToGene.put('<', PREV);
+	charToGene.put('+', INC);
+	charToGene.put('-', DEC);
+	charToGene.put('.', PRINT);
+	charToGene.put(',', INPUT);
+	charToGene.put('[', BRAC_LEFT);
+	charToGene.put(']', BRAC_RIGHT);
 	
     }
 
-    public static void strToByte(String s){
+    public static byte[] strToByte(String s){
 	byte[] a = new byte[s.length()];
 	for(int i = 0; i < s.length(); i++){
-	    a[i] = Integer.parseInt(s.charAt(i));
+	    a[i] = Byte.parseByte("" + s.charAt(i));
 	}
+	return a;
     }
 
-    public static void byteToString(byte[] a){
+    public static String byteToString(byte[] a){
 	String s = "";
 	for(byte b : a){
 	    s += "" + b;
@@ -81,13 +82,17 @@ public class Gene{
 	this.data = data;
     }
 
+    public Gene(String s){
+	data = strToByte(s);
+    }
+
     public Gene(char c){
-	data = charToGene.put(c);
+	data = charToGene.get(c);
     }
 
 
     public void strSet(String s){
-	data = strToGenes(s);
+	data = strToByte(s);
     }
 
     /**
@@ -100,12 +105,12 @@ public class Gene{
     public void makeRandom(){
 	for(int i = 0; i < 3; i++){
 	    // Set each bit to one or zero randomly
-	    data[i] = Math.floor( Math.Random() * 2);
+	    data[i] = (byte) Math.floor( Math.random() * 2);
 	}
     }
     
     public String toString(){
-        return "" + geneToChar.put(data);
+        return "" + geneToChar.get(data);
     }
     
 }
