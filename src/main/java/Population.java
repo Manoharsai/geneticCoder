@@ -95,7 +95,7 @@ public class Population {
 	    int fitness = 0;
 	    //sample regex
 	    
-	    String output = bRRunner.run(Gene.toString(testPrograms.get(i).bytes));
+	    String output = bRRunner.run(testPrograms.get(i).getStringVal());
 	    
 	    testPrograms.get(i).output = output;
 	    
@@ -147,10 +147,10 @@ public class Population {
 	    String shortCode   = (parent1.genes.length < parent2.genes.length) ? parent1.getStringVal() : parent2.getStringVal();
 	    String longcode    = (parent1.genes.length > parent2.genes.length) ? parent1.getStringVal() : parent2.getStringVal();
 	    
-	    int breakpoint     = (int) Math.round((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
+	    int breakpoint     = (int) Math.round((double) shortCode.length() * 1.0 / 4.0) + (int) Math.round(Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 	    
 	    while (breakpoint % 3 != 0) {
-		breakpoint     = (int) Math.round((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
+		breakpoint     = (int) Math.round((double) shortCode.length() * 1.0 / 4.0) + (int) Math.round(Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 	    }
 	    
 	    String codeOne     = shortCode.substring(0, breakpoint) + longcode.substring(breakpoint, longcode.length());

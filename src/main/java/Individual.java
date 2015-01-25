@@ -11,6 +11,8 @@ public class Individual implements Comparable{
     public Gene[] genes;
     
     public int fitness;
+
+    public String output;
     
     
     /*!

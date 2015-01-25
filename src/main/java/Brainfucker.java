@@ -4,7 +4,7 @@ public class Brainfucker{
 
     private String desiredOutput;
     private int maxIteration;
-    private GeneticSimple gs;
+    private Population gs;
     
     public Brainfucker(String desiredOutput,
 		       int population,
@@ -14,7 +14,7 @@ public class Brainfucker{
 		       ){
 	this.desiredOutput = desiredOutput;
 	this.maxIteration = maxIteration;
-	gs = new GeneticSimple(population,  elitismRate, mutationRate, desiredOutput);
+	gs = new Population(population,  elitismRate, mutationRate, desiredOutput);
 	
     }
 
