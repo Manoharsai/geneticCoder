@@ -104,7 +104,7 @@ public class Population {
 			Matcher loopMatcher = loopPattern.matcher(output);
 			
 			if (loopMatcher.find()) {
-			    testPrograms.get(i).fillRandomly(true);
+			    testPrograms.get(i).fillRandomly();
 			    fitness = errorVal;
 						  
 			}else if (output.contains("<=$:$=>")) {
@@ -144,8 +144,8 @@ public class Population {
 			Individual parent1 = testPrograms.get(i);
 			Individual parent2 = testPrograms.get(i + 1);
 
-			String shortCode   = (parent1.bytes.length < parent2.bytes.length) ? Gene.toString(parent1.bytes) : Gene.toString(parent2.bytes);
-			String longcode    = (parent1.bytes.length > parent2.bytes.length) ? Gene.toString(parent1.bytes) : Gene.toString(parent2.bytes);
+			String shortCode   = (parent1.genes.length < parent2.genes.length) ? parent1.getStringVal() : parent2.getStringVal();
+			String longcode    = (parent1.genes.length > parent2.genes.length) ? parent1.getStringVal() : parent2.getStringVal();
 
 			int breakpoint     = (int) ((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 
@@ -153,8 +153,8 @@ public class Population {
 				breakpoint     = (int) ((double) shortCode.length() * 1 / 4.0) + (Math.random() * (double) shortCode.length() * 3.0 / 4.0);
 			}
 
-			String codeOne     = shortCode.substring(0, breakpoint - 1) + longcode.substring(breakpoint, longcode.length() - 1);
-			String codeTwo     = longcode.substring(0, breakpoint - 1) + shortCode.substring(breakpoint, longcode.length() - 1);
+			String codeOne     = shortCode.substring(0, breakpoint) + longcode.substring(breakpoint, longcode.length());
+			String codeTwo     = longcode.substring(0, breakpoint) + shortCode.substring(breakpoint, longcode.length());
 
 			buffer.set(a, new Individual(codeOne));
 			buffer.set(a + 1, new Individual(codeTwo));

@@ -22,7 +22,9 @@ public class Individual {
 	
 	genes = new Gene[arrayLength];
 	
-	flipRandBits(bytes.length);
+    for (int i = 0; i < arrayLength; i++) {
+        genes[i] = new Gene();
+    }
 	
 	fitnees = -1;
     }
@@ -32,7 +34,9 @@ public class Individual {
      * @param code: The prewritten string of code
      */
     public Individual(String genome) {
-	genes = Gene.strToGenes(genome);
+    for (int i = 0; i < genes.length; i++) {
+        genes[i] = new Gene(genome.charAt(i));
+    }
 	
 	fitness = -1;
 	
@@ -43,12 +47,23 @@ public class Individual {
      * @param numbBits: the number of bits, the bits are then randomly selected to be flipped in the bytes array
      */
     public void flipRandBits(int numbBits) {
-	int actNumbBits = numbBits;
-	
-	for (int i = 0; i < actNumbBits; i++) {
-	    int pos = (int) Math.floor(Math.random() * bytes.length);
-	    bytes[pos] = (bytes[pos] == 1) ? 0 : 1;
-	}
+        for (int i = 0; i < genes.length; genes++) {
+            genes[i].makeRandom();
+        }
+    }
+
+    /*!
+     * Supports some older code
+     */
+    public void mutate(int numbBits) {
+        flipRandBits(numbBits);
+    }
+
+    /*!
+     * Sets all the genes to random characters
+     */
+    public void fillRandomly() {
+        flipRandBits(genes.length);
     }
     
     /*!
