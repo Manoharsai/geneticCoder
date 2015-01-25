@@ -14,11 +14,11 @@ public class GeneticSimple {
 	private int population;
 	private double elitismRate;
 	private double mutationRate;
-	private Stirng desiredOutput;
+	private String desiredOutput;
 
 	private BrainfuckRunner bRRunner;
 
-	public GeneticSimple(int population double elitismRate, double mutationRate, String desiredOutput) {
+    public GeneticSimple(int population, double elitismRate, double mutationRate, String desiredOutput) {
 		bRRunner = new BrainfuckRunner();
 
 		this.population    = population;
@@ -96,16 +96,16 @@ public class GeneticSimple {
 		for (int i = 0; testPrograms.size() > i; i++) {
 			int fitness = 0;
 			//sample regex
-			String output = bRRunner.run(testProgram.get(i).getStringVal());
+			String output = bRRunner.run(testPrograms.get(i).getStringVal());
 
 			Pattern pattern = Pattern.compile("@\\s*(\\d+)");
 			Matcher matcher = pattern.matcher(output);
 
-			if (matcher.matches()) {
+			if (matcher.find()) {
 				fitness += errorVal;
 			} else {
 				for (int foo = 0; foo < output.length(); foo++) {
-					int charVal = (foo >= desiredOutput.length() + 1) ? 0 : desiredOutput.chatAt(foo);
+					int charVal = (foo >= desiredOutput.length() + 1) ? 0 : desiredOutput.charAt(foo);
 					int difference = charVal - output.charAt(foo);
 					fitness += (difference < 0) ? -difference : difference;
 				}

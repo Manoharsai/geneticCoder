@@ -14,7 +14,7 @@ public class Brainfucker{
 		       ){
 	this.desiredOutput = desiredOutput;
 	this.maxIteration = maxIteration;
-	gs = new GeneticSimple(population, maxIteration, elitismRate, mutationRate);
+	gs = new GeneticSimple(population,  elitismRate, mutationRate, desiredOutput);
 	
     }
 
@@ -23,13 +23,13 @@ public class Brainfucker{
 	gs.initPopulation();
 
 	// Loop through each generations
-	for(int i = 0; i < maxiteration; i++){
+	for(int i = 0; i < maxIteration; i++){
 	    gs.fitness();
 	    gs.sortPopulation();
 
 	    System.out.println("iteration : " + i + "     ");
 
-	    if(gs.getTestPrograms.get(0).fitness == 0){
+	    if(gs.getTestPrograms().get(0).fitness == 0){
 		break;
 	    }
 
