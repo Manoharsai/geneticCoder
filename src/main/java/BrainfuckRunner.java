@@ -46,14 +46,18 @@ class BrainfuckRunner {
 	output = "";
     }
 
-    private void run(String program){
+    public  String run(String program) throws Exception{
 	
-	
+	for(int i = 0; i < prog.length(); i++){
+	    interperateChar(prog.charAt(i), i);
+	}
+	return output;
     }
 
     private void interperateChar(char c, int progLoc) throws Exception {
 	switch(c){
 	case Token.NEXT:
+	    System.out.println("t");
 	    if(dataPtr + 1 < data.length){
 		dataPtr++;
 	    } else {
